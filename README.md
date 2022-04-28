@@ -24,3 +24,6 @@ b. Create a constructor function
 3. Handle errors
 a. Create a function to handle the server error (status 500)
 b. Create a function to handle "page not found error" (status 404)
+4. Create GET request to the 3rd party API for these endpoints:
+ a.  /trending : Get the trending movies data from the Movie DB API
+ b.  /search: Search for a movie name to get its information
