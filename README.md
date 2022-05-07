@@ -3,6 +3,7 @@
 **Author Name**: Esam Ankir
 
 ## WRRC
+![WRRC](./images/WRRC2.jpg)
 ![WRRC](./images/WRRC.jpg)
 
 ## Overview
