@@ -1,5 +1,5 @@
 'use strict';
-
+const PORT = 3000;
 const url = "postgres://esam:12345@localhost:5432/movies";
 const bodyParser = require('body-parser');
 const { Client } = require('pg')
@@ -10,8 +10,8 @@ const cors = require("cors");
 const axios = require('axios').default;
 require('dotenv').config()
 const apiKey = process.env.API_KEY;
-const PORT = 3000;
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -19,8 +19,14 @@ app.use(bodyParser.json())
 
 app.post("/addMovie", handleAdd);
 app.get("/getMovies", handleGet);
-app.use(handleError);
- 
+// app.use(handleError);
+
+app.put("/UPDATE/:updateName", handleUpdate);
+app.delete("/DELETE", handleDelete);
+app.get("/getMoviesById", handleGetById);
+
+
+
 function handleAdd(req, res) {
     const { name, time, summary, image } = req.body;
 
@@ -45,10 +51,37 @@ function handleGet(req, res) {
         handleError(err, req, res);
     });
 }
+function handleUpdate(req, res) {
+    const { name, time, summary, image } = req.body;
+    const { id } = req.params;
+    let sql = `UPDATE movie SET name=$1, time=$2, summary=$3, image=$4 WHERE id=$5 RETURNING *;`  
+    console.log(sql);
+    let values = [name, time, summary, image, id];
+    client.query(sql, values).then((result) => {
+      // console.log(result.rows);
+      return res.status(200).json(result.rows);
+    }).catch()
+  }
+  function handleDelete(req, res) {
+    const  movieId  = req.query.id
+    let sql = 'DELETE FROM movie WHERE id=$1;'
+    let value = [movieId];
+    client.query(sql, value).then(result => {
+      console.log(result);
+      res.send("deleted");
+    }
+    ).catch()
+  }
+  function handleGetById(req, res) {
 
-function handleError(error, req, res) {
-    res.status(500).send(error);
-}
+    const { id } = req.query;
+    let sql = 'SELECT * from movie WHERE id=$1;'
+    let value = [id];
+    client.query(sql, value).then((result) => {
+      // console.log(result);
+      res.json(result.rows);
+    }).catch();
+  }
 // app.get("/", handleHomePage);
 // app.get('/favorite', handleFavorite);
 // app.get('/trending', handleTrending);
