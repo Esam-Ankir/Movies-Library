@@ -74,9 +74,9 @@ function handleUpdate(req, res) {
   }
   function handleGetById(req, res) {
 
-    const { x } = req.query;
+    const { id } = req.query;
     let sql = 'SELECT * from movie WHERE id=$1;'
-    let value = [x];
+    let value = [id];
     client.query(sql, value).then((result) => {
       // console.log(result);
       res.json(result.rows);
