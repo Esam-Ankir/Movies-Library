@@ -21,9 +21,9 @@ app.post("/addMovie", handleAdd);
 app.get("/getMovies", handleGet);
 // app.use(handleError);
 
-app.put("/UPDATE/:updateName", handleUpdate);
-app.delete("/DELETE", handleDelete);
-app.get("/getMoviesById", handleGetById);
+app.put("/UPDATE/:id", handleUpdate);
+app.delete("/DELETE/:id", handleDelete);
+app.get("/getMoviesById/:id", handleGetById);
 
 
 
@@ -63,7 +63,7 @@ function handleUpdate(req, res) {
     }).catch()
   }
   function handleDelete(req, res) {
-    const  movieId  = req.query.id
+    const  movieId  = req.params.id
     let sql = 'DELETE FROM movie WHERE id=$1;'
     let value = [movieId];
     client.query(sql, value).then(result => {
@@ -73,12 +73,11 @@ function handleUpdate(req, res) {
     ).catch()
   }
   function handleGetById(req, res) {
-
-    const { id } = req.query;
+    const { id } = req.params;
     let sql = 'SELECT * from movie WHERE id=$1;'
+    // console.log(id);
     let value = [id];
     client.query(sql, value).then((result) => {
-      // console.log(result);
       res.json(result.rows);
     }).catch();
   }
